@@ -4,7 +4,8 @@
 //!
 //! ```
 //! const BYTES: &[u8] = "The quick brown fox jumps over the lazy dog".as_bytes();
-//! assert_eq!(const_crc32::crc32(BYTES), 0x414fa339_u32);
+//! const CKSUM: u32 = const_crc32::crc32(BYTES);
+//! assert_eq!(CKSUM, 0x414fa339_u32);
 //! ```
 
 /// typically crc32 implementations set up a [u32; 256] lookup table. this computes

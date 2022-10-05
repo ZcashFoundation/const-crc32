@@ -1,12 +1,13 @@
 [package]
 name = "const-crc32"
-version = "1.0.0"
+version = "1.0.1"
 edition = "2021"
 authors = ["Jonathan Strong <jstrong@shipyard.rs>"]
 license = "MIT"
 description = "A `const fn` implementation of crc32 checksum algorithm"
 repository = "https://git.shipyard.rs/jstrong/const-crc32"
 keywords = ["checksum", "crc", "crc32", "const"]
+readme = "README.md"
 
 [dev-dependencies]
 crc32fast = "1.2"
