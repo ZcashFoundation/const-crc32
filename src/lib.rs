@@ -8,7 +8,11 @@
 //! assert_eq!(CKSUM, 0x414fa339_u32);
 //! ```
 
-/// typically crc32 implementations set up a [u32; 256] lookup table. this computes
+#![feature(const_eval_limit)]
+
+#![const_eval_limit = "1000000000"]
+
+/// used to generate up a [u32; 256] lookup table in `crc32`. this computes
 /// the table on demand for a given "index" `i`
 const fn table_fn(i: u32) -> u32 {
     let mut out = i;
@@ -25,6 +29,20 @@ const fn table_fn(i: u32) -> u32 {
     out
 }
 
+const fn get_table() -> [u32; 256] {
+    let mut table: [u32; 256] = [0u32; 256];
+    let mut i = 0;
+
+    while i < 256 {
+        table[i] = table_fn(i as u32);
+        i += 1;
+    }
+
+    table
+}
+
+const TABLE: [u32; 256] = get_table();
+
 /// A `const fn` crc32 checksum implementation.
 ///
 /// Note: this is a naive implementation that should be expected to have poor performance
@@ -32,12 +50,9 @@ const fn table_fn(i: u32) -> u32 {
 /// `const` variables based on `static` or `const` data available at build time.
 pub const fn crc32(buf: &[u8]) -> u32 {
     let mut out = !0u32;
-    let mut i = 0;
-    loop {
-        if i >= buf.len() { break }
-
-        out = (out >> 8) ^ table_fn((out & 0xff) ^ (buf[i] as u32));
-
+    let mut i = 0usize;
+    while i < buf.len() {
+        out = (out >> 8) ^ TABLE[((out & 0xff) ^ (buf[i] as u32)) as usize];
         i += 1;
     }
     !out
@@ -91,4 +106,18 @@ mod tests {
             assert_eq!(crc32(&buf[..]), crc32fast::hash(&buf[..]));
         }
     }
+
+    #[test]
+    fn check_const_eval_limit_not_reached_on_100k_data() {
+        const BYTES: &[u8] = &[42u8; 1024 * 100];
+        const CKSUM: u32 = crc32(BYTES);
+        assert_eq!(CKSUM, crc32fast::hash(&BYTES[..]));
+    }
+
+    // #[test]
+    // fn check_const_eval_limit_not_reached_on_1mb_data() {
+    //     const BYTES: &[u8] = &[42u8; 1024 * 1024];
+    //     const CKSUM: u32 = crc32(BYTES);
+    //     assert_eq!(CKSUM, crc32fast::hash(&BYTES[..]));
+    // }
 }
