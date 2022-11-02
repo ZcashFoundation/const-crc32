@@ -18,7 +18,10 @@ if used on dynamic data at runtime. Usage should generally be restricted to decl
 
 ## `#[const_eval_limit]`
 
-This crate sets `#[const_eval_limit]` to 1,000,000,000 to avoid hitting the limit when
-executing the `const fn`, which requires `#![feature(const_eval_limit)]`.
+You may need to increase the crate-wide `const_eval_limit` setting to use `const_crc32` for larger byte slices.
+
+Increating `const_eval_limit` requires the nightly-only `#![feature(const_eval_limit)]`.
+
+Previously, this crate set the limit itself, however, as of the 2022-10-30 nightly, the value set in `const_crc32` does not increase the limit for crates which use the library.
 
 Compile time for `const` data around 100k is less than 1s.
