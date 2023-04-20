@@ -49,7 +49,12 @@ const TABLE: [u32; 256] = get_table();
 /// if used on dynamic data at runtime. Usage should generally be restricted to declaring
 /// `const` variables based on `static` or `const` data available at build time.
 pub const fn crc32(buf: &[u8]) -> u32 {
-    let mut out = !0u32;
+    crc32_seed(buf, 0)
+}
+
+#[inline]
+pub const fn crc32_seed(buf: &[u8], seed: u32) -> u32 {
+    let mut out = !seed;
     let mut i = 0usize;
     while i < buf.len() {
         out = (out >> 8) ^ TABLE[((out & 0xff) ^ (buf[i] as u32)) as usize];
