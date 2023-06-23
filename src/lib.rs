@@ -8,9 +8,6 @@
 //! assert_eq!(CKSUM, 0x414fa339_u32);
 //! ```
 
-#![cfg_attr(test, feature(const_eval_limit))]
-#![cfg_attr(test, const_eval_limit = "0")]
-
 /// used to generate up a [u32; 256] lookup table in `crc32`. this computes
 /// the table on demand for a given "index" `i`
 const fn table_fn(i: u32) -> u32 {
