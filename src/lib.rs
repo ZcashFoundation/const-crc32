@@ -10,6 +10,7 @@
 
 /// used to generate up a [u32; 256] lookup table in `crc32`. this computes
 /// the table on demand for a given "index" `i`
+#[rustfmt::skip]
 const fn table_fn(i: u32) -> u32 {
     let mut out = i;
 
@@ -101,12 +102,10 @@ mod tests {
     fn crc32_compute_table() -> [u32; 256] {
         let mut crc32_table = [0; 256];
 
-        for n in 0..256 {
-            crc32_table[n as usize] = (0..8).fold(n as u32, |acc, _| {
-                match acc & 1 {
-                    1 => 0xedb88320 ^ (acc >> 1),
-                    _ => acc >> 1,
-                }
+        for n in 0..256_u32 {
+            crc32_table[n as usize] = (0..8).fold(n, |acc, _| match acc & 1 {
+                1 => 0xedb88320 ^ (acc >> 1),
+                _ => acc >> 1,
             });
         }
 
@@ -116,7 +115,7 @@ mod tests {
     #[test]
     fn check_table_fn_against_example_code() {
         let table = crc32_compute_table();
-        for i in 0..256{
+        for i in 0..256 {
             assert_eq!(table[i], table_fn(i as u32));
         }
     }
