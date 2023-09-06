@@ -71,8 +71,8 @@ pub const fn crc32(buf: &[u8]) -> u32 {
 /// on what kind of data the bytes represent:
 ///
 /// ```
-/// const THING_ONE_SEED: u32 = 0xdeadbeef_u32;
-/// const THING_TWO_SEED: u32 = 0xbaaaaaad_u32;
+/// const THING_ONE_SEED: u32 = 0xbaaaaaad_u32;
+/// const THING_TWO_SEED: u32 = 0x2bad2bad_u32;
 ///
 /// let thing_one_bytes = "bump! thump!".as_bytes();
 /// let thing_two_bytes = "thump! bump!".as_bytes();
