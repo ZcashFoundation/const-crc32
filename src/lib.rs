@@ -3,10 +3,12 @@
 //! # Examples
 //!
 //! ```
+//! use const_crc32_nostd as const_crc32;
 //! const BYTES: &[u8] = "The quick brown fox jumps over the lazy dog".as_bytes();
 //! const CKSUM: u32 = const_crc32::crc32(BYTES);
 //! assert_eq!(CKSUM, 0x414fa339_u32);
 //! ```
+#![no_std]
 
 /// used to generate up a [u32; 256] lookup table in `crc32`. this computes
 /// the table on demand for a given "index" `i`
@@ -57,6 +59,8 @@ pub const fn crc32(buf: &[u8]) -> u32 {
 /// Calculating the checksum from several parts of a larger input:
 ///
 /// ```
+/// use const_crc32_nostd as const_crc32;
+///
 /// const BYTES: &[u8] = "The quick brown fox jumps over the lazy dog".as_bytes();
 ///
 /// let mut cksum = 0u32;
@@ -72,6 +76,8 @@ pub const fn crc32(buf: &[u8]) -> u32 {
 /// on what kind of data the bytes represent:
 ///
 /// ```
+/// use const_crc32_nostd as const_crc32;
+///
 /// const THING_ONE_SEED: u32 = 0xbaaaaaad_u32;
 /// const THING_TWO_SEED: u32 = 0x2bad2bad_u32;
 ///
